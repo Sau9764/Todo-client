@@ -1,11 +1,12 @@
-import React, { useLayoutEffect } from 'react'
+import React from 'react'
 import Todo from './Todo'
 
-function Todos({ todos }) {
+function Todos({ todos, deleteTodo, editTodo }) {
     return (
-       todos.map((todo) => {
-            return <Todo key={todo.id} todo={todo} />
-       })
+        todos.length === 0 ? <> No Records Found..</> : 
+            todos.map(todo => {
+                return  <Todo key={todo.id} Singletodo={todo} deleteTodo={deleteTodo} editTodo={editTodo} />
+            })
     )
 }
 

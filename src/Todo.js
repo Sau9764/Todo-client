@@ -2,12 +2,12 @@ import React from 'react'
 import bin from './bin.png'
 import edit from './edit.png'
 
-function Todo({ todo }) {
+function Todo({ Singletodo, deleteTodo, editTodo }) {
     return (
         <div className="todo">
-            {todo.text}
-            <img className="bin" src={bin} />
-            <img className="edit" src={edit} />
+            {Singletodo.text}
+            <img className="bin" src={bin} del-key={Singletodo.id} onClick={deleteTodo} />
+            <img className="edit" src={edit} edit-key={Singletodo.id} edit-text={Singletodo.text} onClick={editTodo}/>
         </div>
     )
 }
