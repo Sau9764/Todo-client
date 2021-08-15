@@ -55,8 +55,8 @@
 }
 
 .bin {
-  height: 20px;
-  width: 20px;
+  height: 30px;
+  width: 30px;
   float: right;
   padding: 7px;
   cursor: pointer;
@@ -69,8 +69,8 @@
 }
 
 .edit {
-  height: 20px;
-  width: 20px;
+  height: 30px;
+  width: 30px;
   float: right;
   padding: 7px;
   border-radius: 3px;

@@ -38,7 +38,7 @@ function Signup({ regeister, handleSignup, signInData }) {
                 />
                 <br />
 
-                <button className="btn" >Register</button>
+                <button className="btn btn-success" >Register</button>
             </form>
         </>
     )

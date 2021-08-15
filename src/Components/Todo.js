@@ -1,6 +1,6 @@
 import React from 'react'
-import bin from './bin.png'
-import edit from './edit.png'
+import bin from '../images/bin.png'
+import edit from '../images/edit.png'
 
 function Todo({ Singletodo, deleteTodo, editTodo }) {
     return (
