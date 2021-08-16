@@ -15,7 +15,7 @@ function App() {
   const [editText, setEditText] = useState({id: "", text: ""})
   const [newText, setnewText] = useState("")
 
-  const [isLoggedIn, setisLoggedIn] = useState(false)
+  const [isLoggedIn, setisLoggedIn] = useState(true)
   const [isEditTodo, setEditTodo] = useState(false)
   const [addTodo, setAddTodo] = useState(false)
   const [showEdit, setShowEdit] = useState(false)
@@ -71,15 +71,14 @@ function App() {
   async function Add(e){
     e.preventDefault()
     const dataObj = JSON.parse(localStorage.getItem('dataStorage'))
-    if(dataObj == true){
+    if(dataObj.isLoggedIn === true){
       try {
-        let res = await Axios.post('http://localhost:5000/api/new', {text: newText}, { headers: {
+        await Axios.post('http://localhost:5000/api/new', {text: newText}, { headers: {
           Authorization: `token ${dataObj.token}`
         }})
         try {
           let getTodos = await Axios.get('http://localhost:5000/api/all', { headers: { Authorization: `token ${dataObj.token}`}})
           setTodos(getTodos.data.data)
-          // console.log(getTodos.data.data);
           alert("Successfully Added")
         }catch(error) {
           localStorage.removeItem('dataStorage')
@@ -154,36 +153,51 @@ function App() {
     }
   }
 
-  // useEffect(() => {
-  //   const dataObj = JSON.parse(localStorage.getItem('dataStorage'))
-  //   const now = new Date()
-  //   if(dataObj != null ){
-  //     if (now.getTime() > dataObj.expiry) {
-  //       localStorage.removeItem('dataStorage')
-  //       if(isLoggedIn) alert("session expired.")
-  //     }else{
-  //       try{
-  //         let cancle
-  //         let res = Axios.get('http://localhost:5000/callback', {headers: { Authorization: `token ${dataObj.token}`},
-  //           cancelToken: new Axios.CancelToken(c => cancle = c)
-  //         })
-  //         if(res.data.msg !== "Token Verified"){
-  //           localStorage.removeItem('dataStorage')
-  //         }else{
-  //           if(!isLoggedIn) setisLoggedIn(!isLoggedIn)
-  //         }
-  //         return () => cancle()
-  //       }catch(error) {
-  //         localStorage.removeItem('dataStorage')
-  //         if (error.response) {
-  //           alert(error.response.status + " " + error.response.data.msg)
-  //         } else {
-  //           console.log('Error ' + error.message)
-  //         }
-  //       }
-  //     }
-  //   }
-  // })
+  useEffect( async () => {
+    const dataObj = JSON.parse(localStorage.getItem('dataStorage'))
+    const now = new Date()
+    if(dataObj != null ){
+      if (now.getTime() > dataObj.expiry) {
+        localStorage.removeItem('dataStorage')
+        if(isLoggedIn) alert("session expired.")
+      }else{
+        try{
+          let res = await Axios.get('http://localhost:5000/auth/callback', { headers: {
+            Authorization: `token ${dataObj.token}`
+          }})
+          if(res.data.msg !== "Token Verified"){
+            localStorage.removeItem('dataStorage')
+          }else{
+            setisLoggedIn(true)
+            getAllData(dataObj)
+          }
+        }catch(error) {
+          localStorage.removeItem('dataStorage')
+          if (error.response) {
+            alert(error.response.status + " " + error.response.data.msg)
+          } else {
+            console.log('Error ' + error.message)
+          }
+        }
+      }
+    }else{
+      setisLoggedIn(false)
+    }
+  }, [])
+
+  async function getAllData(dataObj) {
+    try {
+      let getTodos = await Axios.get('http://localhost:5000/api/all', { headers: { Authorization: `token ${dataObj.token}`}})
+      setTodos(getTodos.data.data)
+    }catch(error) {
+      localStorage.removeItem('dataStorage')
+      if (error.response) {
+        alert(error.response.status + " " + error.response.data.msg)
+      }else {
+        console.log('Error ' + error.message)
+      }
+    }
+  }
 
   return (
     <div className="container">
@@ -203,3 +217,4 @@ function App() {
 }
 
 export default App;
+
