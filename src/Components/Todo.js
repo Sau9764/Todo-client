@@ -1,13 +1,43 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import bin from '../images/bin.png'
 import edit from '../images/edit.png'
+import { DashboardContext } from './App'
+import Edit from './Edit'
 
-function Todo({ Singletodo, deleteTodo, editTodo }) {
+
+function Todo({ Singletodo }) {
+
+    const { 
+        deleteTodo,  
+        editText, 
+        setEditText, 
+        change,
+        showEdit, 
+        handleShowEdit,
+        handleCloseEdit
+    } = useContext(DashboardContext)
+    
+    function handle(e) { 
+        const newData = {...editText}
+        newData[e.target.id] = e.target.value
+        setEditText(newData)
+    }
+    
     return (
         <div className="todo">
-            {Singletodo.text}
+            <div className="todoText">{Singletodo.text}</div>
+            <i className="createdAtText">[{Singletodo.createdAt}]</i>
             <img className="bin" src={bin} del-key={Singletodo.id} onClick={deleteTodo} />
-            <img className="edit" src={edit} edit-key={Singletodo.id} edit-text={Singletodo.text} onClick={editTodo}/>
+            <img className="edit" src={edit} edit-key={Singletodo.id} edit-text={Singletodo.text} onClick={handleShowEdit}/>
+
+            <Edit 
+                showEdit={showEdit}
+                handleCloseEdit={handleCloseEdit}
+                handle={handle}
+                editText={editText}
+                change={change}
+            />
+
         </div>
     )
 }

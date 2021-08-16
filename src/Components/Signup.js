@@ -1,13 +1,44 @@
-import React from 'react'
+import React, { useState } from 'react'
+import Axios from 'axios'
 
-function Signup({ regeister, handleSignup, signInData }) {
+function Signup({ setSigninLogin }) {
+
+    const [signInData, setsignInData] = useState({username: "", password: "", confPass: ""})
+
+    function handleSignup(e){
+        const newData = {...signInData}
+        newData[e.target.id] = e.target.value
+        setsignInData(newData)
+    }
+
+    async function regeister(e) { 
+        e.preventDefault()
+        if(signInData.password !== signInData.confPass){
+          alert("Password and conform password should be same")
+        }else{
+          try {      
+            let res = await Axios.post("http://localhost:5000/auth/sign-up", {username: signInData.username, password: signInData.password})
+            alert(res.data.msg)
+            setSigninLogin(prev => (!prev))
+          }catch(error) {
+            if (error.response) {
+              alert(error.response.status + " " + error.response.data.msg)
+            } else if (error.request) {
+              console.log(error.request);
+            } else {
+              console.log('Error ' + error.message);
+            }
+          }
+        }
+      }
+
     return (
         <>
-            <h1> Sign Up </h1>
+            <h1 className="loginSignup_title"> Sign Up </h1>
             <form onSubmit={(e) => regeister(e)} className='login-form'>
-                <label>Enter Username</label>  
+                <label className="loginSignup_label">Enter Username</label>  
                 <input 
-                    className="text"
+                    className="loginSignup_text"
                     type="text"
                     onChange={(e) => handleSignup(e)}
                     id="username"
@@ -16,9 +47,9 @@ function Signup({ regeister, handleSignup, signInData }) {
                 />
                 <br />
 
-                <label>Enter Password</label>  
+                <label className="loginSignup_label">Enter Password</label>  
                 <input 
-                    className="text"
+                    className="loginSignup_text"
                     type="password"
                     onChange={(e) => handleSignup(e)}
                     id="password"
@@ -27,9 +58,9 @@ function Signup({ regeister, handleSignup, signInData }) {
                 />
                 <br />
 
-                <label>Conform Password</label>  
+                <label className="loginSignup_label">Conform Password</label>  
                 <input 
-                    className="text"
+                    className="loginSignup_text"
                     type="password"
                     onChange={(e) => handleSignup(e)}
                     id="confPass"

@@ -1,0 +1,114 @@
+.todosList {
+    min-width: 50%;
+    min-height: 80vh;
+}
+
+.Dashboard_title { 
+    border-bottom: 2px solid #ddd;
+}
+
+.todoContainer {
+    height: 80vh;
+    overflow-y: auto;
+}
+
+.addTodoContainer {
+    float: right;
+    margin-top: -50px;
+    width: 40%;
+    
+}
+
+.add {
+    display: inline-block;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 5px;
+    background-color: rgb(104, 218, 193);
+}
+
+.add:hover {
+    background-color: rgb(79, 170, 152);
+}
+
+.add label {
+    cursor: pointer;
+}
+
+.logout {
+    margin-left: 10px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: rgb(142, 208, 235);
+}
+
+.logout:hover {
+    background-color: rgb(84, 149, 175);
+}
+
+.addTodo {
+    height: 20px;
+    width: 20px;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+.bin {
+    height: 20px;
+    width: 20px;
+    float: right;
+    cursor: pointer;
+}
+
+.edit {
+    height: 20px;
+    width: 20px;
+    float: right;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.todo {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    display: grid;
+    grid-template-columns: 50% 40% 5% 5%;
+}
+
+.todo:hover {
+    background-color: rgb(192, 225, 238);
+}
+.todoText {
+    font-weight: bold;
+    display: inline-block;
+    margin-right: 50px;
+    overflow: hidden;
+}
+
+.createdAtText {
+    font-size: 12px;
+    font-weight: 100;
+}
+
+.model_title {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.edit_text {
+    height: 50px;
+    width: 100%;
+}
+
+.wd-100 {
+    width: 100px;
+}
+
+.wd-150 {
+    width: 150px;
+}
+

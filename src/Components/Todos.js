@@ -1,12 +1,14 @@
 import React from 'react'
 import Todo from './Todo'
 
-function Todos({ todos, deleteTodo, editTodo }) {
+function Todos({ todos }) {
     return (
-        todos.length === 0 ? <> No Records Found..</> : 
-            todos.map(todo => {
-                return  <Todo key={todo.id} Singletodo={todo} deleteTodo={deleteTodo} editTodo={editTodo} />
-            })
+        <div className="todoContainer">
+            {todos.length === 0 ? <> No Records Found..</> : 
+                todos.map(todo => {
+                    return  <Todo key={todo.id} Singletodo={todo} />
+                })}
+        </div>
     )
 }
 

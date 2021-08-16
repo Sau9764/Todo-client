@@ -1,76 +1,81 @@
 import React, { useEffect, useState } from 'react'
 import Axios from 'axios'
-import './App.css'
-import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
+import '../css/App.css'
+import '../../node_modules/bootstrap/dist/css/bootstrap.min.css'
+
 import DashboardScreen from './DashboardScreen'
 import LoginSignUpScreen from './LoginSignUpScreen'
 
+export const LoginSignupContext = React.createContext()
+export const DashboardContext = React.createContext()
+
 function App() {
 
-  const [data, setData] = useState({ username: "", password: ""})
-  const [signInData, setsignInData] = useState({username: "", password: "", confPass: ""})
   const [todos, setTodos] = useState([])
   const [editText, setEditText] = useState({id: "", text: ""})
   const [newText, setnewText] = useState("")
 
   const [isLoggedIn, setisLoggedIn] = useState(false)
-  const [isLogout, setisLogout] = useState(false)
   const [isEditTodo, setEditTodo] = useState(false)
   const [addTodo, setAddTodo] = useState(false)
+  const [showEdit, setShowEdit] = useState(false)
+  const [showAdd, setShowAdd] = useState(false)
 
-  // ----------------------------- login functions -----------------------------
+  const loginSignupContextData = {
+    isLoggedIn, 
+    setisLoggedIn, 
+    setTodos
+  }
+
+  const dashboardContextData = {
+    showAdd,
+    handleCloseAdd,
+    handleShowAdd,
+    logout,
+    todos,
+    Add,
+    setnewText,
+    deleteTodo,  
+    editText, 
+    setEditText, 
+    change,
+    showEdit, 
+    handleShowEdit,
+    handleCloseEdit
+  }
+
+  function handleCloseAdd() {
+    setShowAdd(false)
+  }
+
+  function handleShowAdd(e) {
+    setShowAdd(true)
+    setnewText( e.target.getAttribute('add-text'))
+  }
+
+  function handleCloseEdit() {
+    setShowEdit(false)
+  }
+
+  function handleShowEdit(e) {
+    setShowEdit(true)
+    setEditText({id: e.target.getAttribute('edit-key'), text: e.target.getAttribute('edit-text')})
+  }
+
   function logout(e) { // Logout
     e.preventDefault()
-    if(!isLogout) setisLogout(!isLogout)
     if(isLoggedIn) setisLoggedIn(!isLoggedIn)
     localStorage.removeItem('dataStorage')
-    // window.location.reload();
   }
-
-  // ----------------------------- SignUp functions -----------------------------
-  function handleSignup(e){ // SignUp
-    const newData = {...signInData}
-    newData[e.target.id] = e.target.value
-    setsignInData(newData)
-  }
-  async function regeister(e) { // Sign Up
-    e.preventDefault()
-    if(signInData.password !== signInData.confPass){
-      alert("Password and conform password should be same")
-    }else{
-      try {      
-        let res = await Axios.post("http://localhost:5000/auth/sign-up", {username: signInData.username, password: signInData.password})
-        alert(res.data.msg)
-        window.location.reload();
-      }catch(error) {
-        if (error.response) {
-          alert(error.response.status + " " + error.response.data.msg)
-        } else if (error.request) {
-          console.log(error.request);
-        } else {
-          console.log('Error ' + error.message);
-        }
-      }
-    }
-  }
-
-  // ----------------------------- Add todo functions -----------------------------
-  function handleAdd(e) { // Add Todo
-    setnewText(e.target.value)
-  }
-  function addToggle(e){ // Add toggle
-    setAddTodo(!addTodo) 
-    console.log("clicked" + addTodo)
-  }
+  
   async function Add(e){
     e.preventDefault()
     const dataObj = JSON.parse(localStorage.getItem('dataStorage'))
-    if(dataObj.isLoggedIn === true){
+    if(dataObj == true){
       try {
         let res = await Axios.post('http://localhost:5000/api/new', {text: newText}, { headers: {
           Authorization: `token ${dataObj.token}`
         }})
-
         try {
           let getTodos = await Axios.get('http://localhost:5000/api/all', { headers: { Authorization: `token ${dataObj.token}`}})
           setTodos(getTodos.data.data)
@@ -84,8 +89,7 @@ function App() {
             console.log('Error ' + error.message)
           }
         }
-        
-        
+        handleCloseAdd()
       }catch(error){
         if (error.response) {
           alert(error.response.status + " " + error.response.data.msg)
@@ -93,27 +97,13 @@ function App() {
           console.log('Error ' + error.message);
         }
       }
-      setAddTodo(!addTodo)
     }else{
       localStorage.removeItem('dataStorage')
       if(addTodo) setAddTodo(!addTodo)
       if(isLoggedIn) setisLoggedIn(!isLoggedIn) 
     }
   }
-
-  // ----------------------------- Edit todo functions -----------------------------
-  function handleEdit(e){ // Edit text
-    const obj = {...editText}
-    obj[e.target.id] = e.target.value;
-    setEditText(obj)
-  }
-  async function editTodo(e) { // Edit component display
-    if(!isEditTodo) setEditTodo(!isEditTodo)
-    const obj = {...editText}
-    obj.id = e.target.getAttribute('edit-key');
-    obj.text = e.target.getAttribute('edit-text')
-    setEditText(obj)
-  }
+  
   async function change(e) { // Edit todo
     e.preventDefault()
     const dataObj = JSON.parse(localStorage.getItem('dataStorage'))
@@ -128,7 +118,8 @@ function App() {
           if(ele.id != editText.id) return ele
           else return editText
         }))
-        if(isEditTodo) setEditTodo(!isEditTodo)
+        setEditTodo([])
+        handleCloseEdit()
       }catch(error) {
         if (error.response) {
           alert(error.response.status + " " + error.response.data.msg)
@@ -143,7 +134,6 @@ function App() {
     }
   }
   
-  // ----------------------------- Delete todo functions -----------------------------
   async function deleteTodo(e){ // Delete Todo
     e.preventDefault() 
     const dataObj = JSON.parse(localStorage.getItem('dataStorage'))
@@ -198,35 +188,14 @@ function App() {
   return (
     <div className="container">
 
-      {/* is Logged In or not */}
-
       {isLoggedIn 
-        ? 
-        <DashboardScreen 
-          isEditTodo={isEditTodo} 
-          editText={editText} 
-          change={change} 
-          handleEdit={handleEdit} 
-          addTodo={addTodo} 
-          Add={Add}
-          newText={newText}
-          handleAdd={handleAdd} 
-          addToggle={addToggle} 
-          logout={logout} 
-          todos={todos}
-          deleteTodo={deleteTodo}
-          editTodo={editTodo}
-        /> 
-        : 
-        <LoginSignUpScreen 
-          isLoggedIn={isLoggedIn}
-          setisLoggedIn={setisLoggedIn}
-          setTodos={setTodos}
-          data={data}
-          regeister={regeister}
-          handleSignup={handleSignup}
-          signInData={signInData}
-        />
+        ? <DashboardContext.Provider value={dashboardContextData}>
+            <DashboardScreen /> 
+          </DashboardContext.Provider>
+
+        : <LoginSignupContext.Provider value={loginSignupContextData}>
+            <LoginSignUpScreen />
+          </LoginSignupContext.Provider>
       }
       
     </div>

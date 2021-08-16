@@ -1,23 +1,31 @@
 import React from 'react'
+import { Button, Modal } from 'react-bootstrap'
 
-function AddTodo({ Add, newText, handleAdd }) {
+function AddTodo({ showAdd, handleCloseAdd, handle, Add }) {
     return (
-        <div>
-            <form onSubmit={(e) => Add(e)} className='add-form'>
-                <h1>Add Todo</h1>
-                <textarea 
-                    className="editTodoInput" 
-                    value={newText} 
-                    type="text"
-                    onChange={(e) => handleAdd(e)}
+        <Modal show={showAdd} onHide={handleCloseAdd}>
+            <Modal.Header closeButton>
+            <Modal.Title>Add Todo</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <span className="model_title">Add Todo Task</span>
+                <input 
+                    className="edit_text"
+                    type="text" 
+                    onChange={(e) => handle(e)} 
                     id="text"
                     required
                 />
-                <br />
-                <button className="btn">Add</button>
-            </form>
-            
-        </div>
+            </Modal.Body>
+            <Modal.Footer>
+            <Button className="btn btn-secondary wd-100" onClick={handleCloseAdd}>
+                Close
+            </Button>
+            <Button className="btn btn-primary wd-150" onClick={Add}>
+                Save Changes
+            </Button>
+            </Modal.Footer>
+        </Modal>
     )
 }
 
