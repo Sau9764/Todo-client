@@ -161,7 +161,6 @@ function App() {
         try {
           let getTodos = await Axios.get('http://localhost:5000/api/all', { headers: { Authorization: `token ${dataObj.token}`}})
           setTodos(getTodos.data.data)
-          console.log("UseEffect Interted all data again");
         }catch(error) {
           localStorage.removeItem('dataStorage')
           if (error.response) {
@@ -172,11 +171,11 @@ function App() {
         }
       }else{
         localStorage.removeItem('dataStorage')
-        if(isLoggedIn) setisLoggedIn(!isLoggedIn) 
+        setisLoggedIn(i => (i === true ? false : false)) 
       }
     }
     fetchUseEffectEditDatadata()
-  }, [editText.id, isLoggedIn])
+  }, [editText.id])
 
   useEffect(() => {
     async function fetchUseEffectReloadData() {
@@ -185,7 +184,6 @@ function App() {
       if(dataObj !== null ){
         if (now.getTime() > dataObj.expiry) {
           localStorage.removeItem('dataStorage')
-          if(isLoggedIn) alert("session expired.")
         }else{
           try{
             let res = await Axios.get('http://localhost:5000/auth/callback', { headers: {
@@ -194,9 +192,8 @@ function App() {
             if(res.data.msg !== "Token Verified"){
               localStorage.removeItem('dataStorage')
             }else{
-              setisLoggedIn(true)
+              setisLoggedIn(i => (i === false ? true : true))
               getAllData(dataObj)
-              
             }
           }catch(error) {
             localStorage.removeItem('dataStorage')
@@ -211,9 +208,8 @@ function App() {
         setisLoggedIn(false)
       }
     }
-
     fetchUseEffectReloadData()
-  })
+  }, [])
 
   async function getAllData(dataObj) {
     try {

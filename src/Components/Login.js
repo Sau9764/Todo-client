@@ -40,7 +40,6 @@ function Login({isLoggedIn, setisLoggedIn, setTodos}) {
       try {
         let getTodos = await Axios.get('http://localhost:5000/api/all', { headers: { Authorization: `token ${res.data.id_token}`}})
         setTodos(getTodos.data.data)
-        console.log(getTodos.data.data);
       }catch(error) {
         if (error.response) {
           alert(error.response.status + " " + error.response.data.msg)
