@@ -55,6 +55,7 @@ function App() {
 
   function handleCloseEdit() {
     setShowEdit(false)
+    setEditText({id: "", text: ""})
   }
 
   function handleShowEdit(e) {
@@ -112,12 +113,10 @@ function App() {
           Authorization: `token ${dataObj.token}`
         }})
         alert(res.data.msg)
-        // const todosNew = [...todos]
         setTodos(todos.map(ele => {
           if(ele.id !== editText.id) return ele
           else return editText
         }))
-        setEditText({})
         handleCloseEdit()
       }catch(error) {
         if (error.response) {
@@ -156,7 +155,7 @@ function App() {
   // usefEffect Todos
 
   useEffect(async () => {
-    const dataObj = await JSON.parse(localStorage.getItem('dataStorage'))
+    const dataObj = JSON.parse(localStorage.getItem('dataStorage'))
     if(dataObj!== null && dataObj.isLoggedIn === true){
     try {
       let getTodos = await Axios.get('http://localhost:5000/api/all', { headers: { Authorization: `token ${dataObj.token}`}})
@@ -172,11 +171,10 @@ function App() {
     }
     }else{
       localStorage.removeItem('dataStorage')
-      if(addTodo) setAddTodo(!addTodo)
       if(isLoggedIn) setisLoggedIn(!isLoggedIn) 
     }
     
-  }, [todos])
+  }, [editText.id])
 
   useEffect( async () => {
     const dataObj = JSON.parse(localStorage.getItem('dataStorage'))
@@ -195,6 +193,7 @@ function App() {
           }else{
             setisLoggedIn(true)
             getAllData(dataObj)
+            
           }
         }catch(error) {
           localStorage.removeItem('dataStorage')
