@@ -23,8 +23,8 @@ function LoginSignUpScreen() {
             }
             <div className="login-signup-link">
                 Goto {isSigninLogin 
-                        ? <a href="" className="loginSignUpLink" onClick={toggleLoginSignin}>SignUp</a> 
-                        :  <a href="" className="loginSignUpLink" onClick={toggleLoginSignin}>Login</a>
+                        ? <a href="/#" className="loginSignUpLink" onClick={toggleLoginSignin}>SignUp</a> 
+                        :  <a href="/#" className="loginSignUpLink" onClick={toggleLoginSignin}>Login</a>
                     }
             </div>
         </div>
