@@ -114,10 +114,10 @@ function App() {
         alert(res.data.msg)
         // const todosNew = [...todos]
         setTodos(todos.map(ele => {
-          if(ele.id != editText.id) return ele
+          if(ele.id !== editText.id) return ele
           else return editText
         }))
-        setEditTodo([])
+        setEditText({})
         handleCloseEdit()
       }catch(error) {
         if (error.response) {
@@ -142,7 +142,7 @@ function App() {
       }})
       alert(res.data.msg)
       setTodos(todos.filter(ele => {
-        return ele.id != e.target.getAttribute('del-key')
+        return ele.id !== e.target.getAttribute('del-key')
       }))
     }catch(error){
       if (error.response) {
@@ -153,10 +153,35 @@ function App() {
     }
   }
 
+  // usefEffect Todos
+
+  useEffect(async () => {
+    const dataObj = await JSON.parse(localStorage.getItem('dataStorage'))
+    if(dataObj!== null && dataObj.isLoggedIn === true){
+    try {
+      let getTodos = await Axios.get('http://localhost:5000/api/all', { headers: { Authorization: `token ${dataObj.token}`}})
+      setTodos(getTodos.data.data)
+      console.log("UseEffect Interted all data again");
+    }catch(error) {
+      localStorage.removeItem('dataStorage')
+      if (error.response) {
+        console.log(error.response.status + " " + error.response.data.msg)
+      }else {
+        console.log('Error ' + error.message)
+      }
+    }
+    }else{
+      localStorage.removeItem('dataStorage')
+      if(addTodo) setAddTodo(!addTodo)
+      if(isLoggedIn) setisLoggedIn(!isLoggedIn) 
+    }
+    
+  }, [todos])
+
   useEffect( async () => {
     const dataObj = JSON.parse(localStorage.getItem('dataStorage'))
     const now = new Date()
-    if(dataObj != null ){
+    if(dataObj !== null ){
       if (now.getTime() > dataObj.expiry) {
         localStorage.removeItem('dataStorage')
         if(isLoggedIn) alert("session expired.")

@@ -26,9 +26,9 @@ function Todo({ Singletodo }) {
     return (
         <div className="todo">
             <div className="todoText">{Singletodo.text}</div>
-            <i className="createdAtText">[{Singletodo.createdAt}]</i>
-            <img className="bin" src={bin} del-key={Singletodo.id} onClick={deleteTodo} />
-            <img className="edit" src={edit} edit-key={Singletodo.id} edit-text={Singletodo.text} onClick={handleShowEdit}/>
+            <i className="createdAtText">[{Singletodo.updatedAt}]</i>
+            <img className="bin" alt="bin logo" src={bin} del-key={Singletodo.id} onClick={deleteTodo} />
+            <img className="edit" alt="edit logo" src={edit} edit-key={Singletodo.id} edit-text={Singletodo.text} onClick={handleShowEdit}/>
 
             <Edit 
                 showEdit={showEdit}

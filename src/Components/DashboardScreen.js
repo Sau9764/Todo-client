@@ -26,7 +26,7 @@ function DashboardScreen() {
             <h1 className="Dashboard_title">Todo Tasks </h1>
             <div className="addTodoContainer" >
                 <div className="add" onClick={handleShowAdd}>
-                    <img src={plus} className="addTodo" />
+                    <img alt="Add btn" src={plus} className="addTodo" />
                     <label> Add Todo </label>
                 </div>
                 <label className="logout" onClick={logout}> Logout </label>
