@@ -143,6 +143,7 @@ function App() {
       setTodos(todos.filter(ele => {
         return ele.id !== e.target.getAttribute('del-key')
       }))
+      setEditText({id: 0, text: ""})
     }catch(error){
       if (error.response) {
         alert(error.response.status + " " + error.response.data.msg)
