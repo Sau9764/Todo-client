@@ -1,5 +1,8 @@
 import React, {useState} from 'react'
 import Axios from 'axios'
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 function Login({isLoggedIn, setisLoggedIn, setTodos}) {
 
@@ -14,7 +17,8 @@ function Login({isLoggedIn, setisLoggedIn, setTodos}) {
     async function submit(e){ // Login
       e.preventDefault()
       try {
-        let res = await Axios.post("http://localhost:5000/auth/login", { username: data.username, password: data.password})
+        // console.log(`http://3.16.56.212:8080/auth/login`);
+        let res = await Axios.post(`http://3.16.56.212:8080/auth/login`, { username: data.username, password: data.password})
         if(!isLoggedIn) setisLoggedIn(!isLoggedIn)
         
         fectchAllRows(res)
@@ -38,7 +42,7 @@ function Login({isLoggedIn, setisLoggedIn, setTodos}) {
       }
       localStorage.setItem('dataStorage', JSON.stringify(dataStorage))
       try {
-        let getTodos = await Axios.get('http://localhost:5000/api/all', { headers: { Authorization: `token ${res.data.id_token}`}})
+        let getTodos = await Axios.get(`http://3.16.56.212:8080/api/all`, { headers: { Authorization: `token ${res.data.id_token}`}})
         setTodos(getTodos.data.data)
       }catch(error) {
         if (error.response) {

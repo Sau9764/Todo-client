@@ -1,5 +1,8 @@
 import React, { useState } from 'react'
 import Axios from 'axios'
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 function Signup({ setSigninLogin }) {
 
@@ -17,7 +20,7 @@ function Signup({ setSigninLogin }) {
           alert("Password and conform password should be same")
         }else{
           try {      
-            let res = await Axios.post("http://localhost:5000/auth/sign-up", {username: signInData.username, password: signInData.password})
+            let res = await Axios.post(`http://3.16.56.212:8080/auth/sign-up`, {username: signInData.username, password: signInData.password})
             alert(res.data.msg)
             setSigninLogin(prev => (!prev))
           }catch(error) {

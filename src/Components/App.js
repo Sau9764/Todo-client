@@ -2,9 +2,12 @@ import React, { useEffect, useState } from 'react'
 import Axios from 'axios'
 import '../css/App.css'
 import '../../node_modules/bootstrap/dist/css/bootstrap.min.css'
+import dotenv from 'dotenv'
 
 import DashboardScreen from './DashboardScreen'
 import LoginSignUpScreen from './LoginSignUpScreen'
+
+dotenv.config();
 
 export const LoginSignupContext = React.createContext()
 export const DashboardContext = React.createContext()
@@ -74,13 +77,13 @@ function App() {
     const dataObj = JSON.parse(localStorage.getItem('dataStorage'))
     if(dataObj.isLoggedIn === true){
       try {
-        await Axios.post('http://localhost:5000/api/new', {text: newText}, { headers: {
+        let res = await Axios.post(`http://3.16.56.212:8080/api/new`, {text: newText}, { headers: {
           Authorization: `token ${dataObj.token}`
         }})
         try {
-          let getTodos = await Axios.get('http://localhost:5000/api/all', { headers: { Authorization: `token ${dataObj.token}`}})
+          let getTodos = await Axios.get(`http://3.16.56.212:8080/api/all`, { headers: { Authorization: `token ${dataObj.token}`}})
           setTodos(getTodos.data.data)
-          alert("Successfully Added")
+          alert(res.data.msg)
         }catch(error) {
           localStorage.removeItem('dataStorage')
           if (error.response) {
@@ -109,7 +112,7 @@ function App() {
     const dataObj = JSON.parse(localStorage.getItem('dataStorage'))
     if(dataObj.isLoggedIn === true){
       try {
-        let res = await Axios.put('http://localhost:5000/api/edit', editText, { headers: {
+        let res = await Axios.put(`http://3.16.56.212:8080/api/edit`, editText, { headers: {
           Authorization: `token ${dataObj.token}`
         }})
         alert(res.data.msg)
@@ -136,7 +139,7 @@ function App() {
     e.preventDefault() 
     const dataObj = JSON.parse(localStorage.getItem('dataStorage'))
     try{
-      let res = await Axios.delete(`http://localhost:5000/api/delete/${e.target.getAttribute('del-key')}`, { headers: {
+      let res = await Axios.delete(`http://3.16.56.212:8080/api/delete/${e.target.getAttribute('del-key')}`, { headers: {
         Authorization: `token ${dataObj.token}`
       }})
       alert(res.data.msg)
@@ -160,7 +163,7 @@ function App() {
       const dataObj = JSON.parse(localStorage.getItem('dataStorage'))
       if(dataObj!== null && dataObj.isLoggedIn === true){
         try {
-          let getTodos = await Axios.get('http://localhost:5000/api/all', { headers: { Authorization: `token ${dataObj.token}`}})
+          let getTodos = await Axios.get(`http://3.16.56.212:8080/api/all`, { headers: { Authorization: `token ${dataObj.token}`}})
           setTodos(getTodos.data.data)
         }catch(error) {
           localStorage.removeItem('dataStorage')
@@ -187,7 +190,7 @@ function App() {
           localStorage.removeItem('dataStorage')
         }else{
           try{
-            let res = await Axios.get('http://localhost:5000/auth/callback', { headers: {
+            let res = await Axios.get(`http://3.16.56.212:8080/auth/callback`, { headers: {
               Authorization: `token ${dataObj.token}`
             }})
             if(res.data.msg !== "Token Verified"){
@@ -214,7 +217,7 @@ function App() {
 
   async function getAllData(dataObj) {
     try {
-      let getTodos = await Axios.get('http://localhost:5000/api/all', { headers: { Authorization: `token ${dataObj.token}`}})
+      let getTodos = await Axios.get(`http://3.16.56.212:8080/api/all`, { headers: { Authorization: `token ${dataObj.token}`}})
       setTodos(getTodos.data.data)
     }catch(error) {
       localStorage.removeItem('dataStorage')
