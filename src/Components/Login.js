@@ -17,8 +17,10 @@ function Login({isLoggedIn, setisLoggedIn, setTodos}) {
     async function submit(e){ // Login
       e.preventDefault()
       try {
-        let res = await Axios.post(`http://${process.env.REACT_APP_HOST}:8080/auth/login`, { username: data.username, password: data.password})
+        let res = await Axios.post(`https://9cuwgcqll5.execute-api.ap-south-1.amazonaws.com/dev/login`, { username: data.username, password: data.password})
         if(!isLoggedIn) setisLoggedIn(!isLoggedIn)
+
+        console.log(res.data)
         
         fectchAllRows(res)
 
@@ -40,9 +42,17 @@ function Login({isLoggedIn, setisLoggedIn, setTodos}) {
         expiry: now.getTime() + (3000000)
       }
       localStorage.setItem('dataStorage', JSON.stringify(dataStorage))
+
+      console.log('Token info -> ' + res.data.id_token)
+      
       try {
-        let getTodos = await Axios.get(`http://${process.env.REACT_APP_HOST}:8080/api/all`, { headers: { Authorization: `token ${res.data.id_token}`}})
-        setTodos(getTodos.data.data)
+        let getTodos = await Axios.get(`https://9cuwgcqll5.execute-api.ap-south-1.amazonaws.com/dev/all`, { headers: { 'X-Amz-Security-Token': `${res.data.id_token}`}})
+        try {
+          console.log(getTodos.data[1].id)
+          setTodos(getTodos.data)
+        }catch(err){
+          console.log('error while adding' + err)
+        }
       }catch(error) {
         if (error.response) {
           alert(error.response.status + " " + error.response.data.msg)

@@ -20,7 +20,11 @@ function Signup({ setSigninLogin }) {
           alert("Password and conform password should be same")
         }else{
           try {      
-            let res = await Axios.post(`http://${process.env.REACT_APP_HOST}:8080/auth/sign-up`, {username: signInData.username, password: signInData.password})
+            let res = await Axios.post(
+                `https://9cuwgcqll5.execute-api.ap-south-1.amazonaws.com/dev/signup`, 
+                {username: signInData.username, password: signInData.password}
+              )
+            // alert(res.data.msg)
             alert(res.data.msg)
             setSigninLogin(prev => (!prev))
           }catch(error) {

@@ -25,10 +25,10 @@ function Todo({ Singletodo }) {
     
     return (
         <div className="todo">
-            <div className="todoText">{Singletodo.text}</div>
-            <i className="createdAtText">[{Singletodo.updatedAt}]</i>
+            <div className="todoText">{Singletodo.todo}</div>
+            <div className="createdAtText">{Singletodo.completed}</div>
             <img className="bin" alt="bin logo" src={bin} del-key={Singletodo.id} onClick={deleteTodo} />
-            <img className="edit" alt="edit logo" src={edit} edit-key={Singletodo.id} edit-text={Singletodo.text} onClick={handleShowEdit}/>
+            <img className="edit" alt="edit logo" src={edit} edit-key={Singletodo.id} edit-text={Singletodo.todo} onClick={handleShowEdit}/>
 
             <Edit 
                 showEdit={showEdit}

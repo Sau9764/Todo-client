@@ -15,7 +15,7 @@ export const DashboardContext = React.createContext()
 function App() {
 
   const [todos, setTodos] = useState([])
-  const [editText, setEditText] = useState({id: "", text: ""})
+  const [editText, setEditText] = useState({id: "", todo: ""})
   const [newText, setnewText] = useState("")
 
   const [isLoggedIn, setisLoggedIn] = useState(true)
@@ -58,12 +58,12 @@ function App() {
 
   function handleCloseEdit() {
     setShowEdit(false)
-    setEditText({id: "", text: ""})
+    setEditText({id: "", todo: ""})
   }
 
   function handleShowEdit(e) {
     setShowEdit(true)
-    setEditText({id: e.target.getAttribute('edit-key'), text: e.target.getAttribute('edit-text')})
+    setEditText({id: e.target.getAttribute('edit-key'), todo: e.target.getAttribute('edit-text')})
   }
 
   function logout(e) { // Logout
@@ -77,12 +77,12 @@ function App() {
     const dataObj = JSON.parse(localStorage.getItem('dataStorage'))
     if(dataObj.isLoggedIn === true){
       try {
-        let res = await Axios.post(`http://${process.env.REACT_APP_HOST}:8080/api/new`, {text: newText}, { headers: {
-          Authorization: `token ${dataObj.token}`
+        let res = await Axios.post(`https://9cuwgcqll5.execute-api.ap-south-1.amazonaws.com/dev/`, {todo: newText}, { headers: {
+          'X-Amz-Security-Token': `${dataObj.token}`
         }})
         try {
-          let getTodos = await Axios.get(`http://${process.env.REACT_APP_HOST}:8080/api/all`, { headers: { Authorization: `token ${dataObj.token}`}})
-          setTodos(getTodos.data.data)
+          let getTodos = await Axios.get(`https://9cuwgcqll5.execute-api.ap-south-1.amazonaws.com/dev/all`, { headers: { 'X-Amz-Security-Token': `${dataObj.token}`}})
+          setTodos(getTodos.data)
           alert(res.data.msg)
         }catch(error) {
           localStorage.removeItem('dataStorage')
@@ -112,8 +112,8 @@ function App() {
     const dataObj = JSON.parse(localStorage.getItem('dataStorage'))
     if(dataObj.isLoggedIn === true){
       try {
-        let res = await Axios.put(`http://${process.env.REACT_APP_HOST}:8080/api/edit`, editText, { headers: {
-          Authorization: `token ${dataObj.token}`
+        let res = await Axios.put(`https://9cuwgcqll5.execute-api.ap-south-1.amazonaws.com/dev/${editText.id}`, editText, { headers: {
+          'X-Amz-Security-Token': `${dataObj.token}`
         }})
         alert(res.data.msg)
         setTodos(todos.map(ele => {
@@ -139,8 +139,8 @@ function App() {
     e.preventDefault() 
     const dataObj = JSON.parse(localStorage.getItem('dataStorage'))
     try{
-      let res = await Axios.delete(`http://${process.env.REACT_APP_HOST}:8080/api/delete/${e.target.getAttribute('del-key')}`, { headers: {
-        Authorization: `token ${dataObj.token}`
+      let res = await Axios.delete(`https://9cuwgcqll5.execute-api.ap-south-1.amazonaws.com/dev/${e.target.getAttribute('del-key')}`, { headers: {
+        'X-Amz-Security-Token': `${dataObj.token}`
       }})
       alert(res.data.msg)
       setTodos(todos.filter(ele => {
@@ -163,8 +163,8 @@ function App() {
       const dataObj = JSON.parse(localStorage.getItem('dataStorage'))
       if(dataObj!== null && dataObj.isLoggedIn === true){
         try {
-          let getTodos = await Axios.get(`http://${process.env.REACT_APP_HOST}:8080/api/all`, { headers: { Authorization: `token ${dataObj.token}`}})
-          setTodos(getTodos.data.data)
+          let getTodos = await Axios.get(`https://9cuwgcqll5.execute-api.ap-south-1.amazonaws.com/dev/all`, { headers: { 'X-Amz-Security-Token': `${dataObj.token}`}})
+          setTodos(getTodos.data)
         }catch(error) {
           localStorage.removeItem('dataStorage')
           if (error.response) {
@@ -184,8 +184,6 @@ function App() {
   useEffect(() => {
     async function fetchUseEffectReloadData() {
       
-      // console.log(process.env.REACT_APP_HOST)
-      
       const dataObj = JSON.parse(localStorage.getItem('dataStorage'))
       const now = new Date()
       if(dataObj !== null ){
@@ -193,11 +191,11 @@ function App() {
           localStorage.removeItem('dataStorage')
         }else{
           try{
-            let res = await Axios.get(`http://${process.env.REACT_APP_HOST}:8080/auth/callback`, { headers: {
-              Authorization: `token ${dataObj.token}`
+            let res = await Axios.get(`https://9cuwgcqll5.execute-api.ap-south-1.amazonaws.com/dev/all`, { headers: {
+              'X-Amz-Security-Token': `${dataObj.token}`
             }})
             if(res.data.msg !== "Token Verified"){
-              localStorage.removeItem('dataStorage')
+              // localStorage.removeItem('dataStorage')
             }else{
               setisLoggedIn(i => (i === false ? true : true))
               getAllData(dataObj)

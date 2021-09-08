@@ -13,8 +13,8 @@ function Edit({ showEdit, handleCloseEdit, handle, editText, change }) {
                     className="edit_text"
                     type="text" 
                     onChange={(e) => handle(e)}
-                    value={editText.text} 
-                    id="text"
+                    value={editText.todo} 
+                    id="todo"
                     required
                 />
             </Modal.Body>
